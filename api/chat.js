@@ -1,4 +1,7 @@
 export default async function handler(req, res) {
+    console.log("Received request to /api/chat");
+    console.log("Authorization header:", process.env.OPENROUTER_API_KEY ? "FOUND" : "NOT FOUND");
+
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
     }
