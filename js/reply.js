@@ -82,14 +82,14 @@ async function getBotResponse(userMessage) {
     };
 
     try {
-        const response = await fetch(apiUrl, {
+        const response = await fetch('/api/chat', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': API_KEY
+                'Content-Type': 'application/json'
             },
-            body: JSON.stringify(requestBody)
+            body: JSON.stringify({ userMessage })
         });
+
 
         if (!response.ok) {
             // Log and display error if API response isn't successful
