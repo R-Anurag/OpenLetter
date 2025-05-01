@@ -31,7 +31,7 @@ Now, respond to: "${userMessage}"
 `;
 
     const requestBody = {
-        model: 'mistral/mistral-7b-instruct',
+        model: 'mistralai/mistral-small-3.1-24b-instruct:free',
         messages: [
             { role: 'user', content: prompt }
         ],
