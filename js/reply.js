@@ -6,7 +6,6 @@ const typingIndicator = document.querySelector('.typing-indicator');
 
 // API endpoint and key for OpenRouter Mistral model
 const apiUrl = "https://openrouter.ai/api/v1/chat/completions";
-const API_KEY = "Bearer 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";
 
 // Base prompt to provide context for the model
 const basePrompt = `You are a defender of deep-tech innovation. Respond intelligently to the user's queries on technology and innovation, especially focusing on areas like semiconductors, AI, robotics, EVs, space tech, quantum computing, and global moonshots. Commerce Minister Piyush Goyal has urged Indian tech founders to focus on these fields over food delivery and quick-commerce models.`;
