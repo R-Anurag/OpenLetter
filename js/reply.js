@@ -13,7 +13,7 @@ function createMessageElement(content, isUser = false) {
     messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
     
     messageDiv.innerHTML = `
-        <div class="avatar">${isUser ? 'U' : 'AI'}</div>
+        <div class="avatar">${isUser ? 'You' : 'Anurag'}</div>
         <div class="message-bubble">${content}</div>
     `;
     
@@ -68,8 +68,8 @@ async function getBotResponse(userMessage) {
             addMessage("I'm sorry, I couldn't get a response. Please try again later.");
         }
     } catch (error) {
-        console.error('Error fetching bot response:', error);
-        addMessage("There was an error communicating with the bot. Please try again later.");
+        console.error('Error fetching Anurag`s response:', error);
+        addMessage("There was an error communicating with the Anurag. Please try again later.");
     } finally {
         hideTypingIndicator();
     }
