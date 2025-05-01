@@ -6,6 +6,7 @@ const typingIndicator = document.querySelector('.typing-indicator');
 
 // API endpoint and key for OpenRouter Mistral model
 const apiUrl = "https://openrouter.ai/api/v1/chat/completions";
+const API_KEY = "Bearer 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";
 
 // Base prompt to provide context for the model
 const basePrompt = `You are a defender of deep-tech innovation. Respond intelligently to the user's queries on technology and innovation, especially focusing on areas like semiconductors, AI, robotics, EVs, space tech, quantum computing, and global moonshots. Commerce Minister Piyush Goyal has urged Indian tech founders to focus on these fields over food delivery and quick-commerce models.`;
@@ -40,7 +41,7 @@ function hideTypingIndicator() {
     typingIndicator.style.display = 'none';
 }
 
-// Function to get response from Vercel API (your backend)
+// Function to get response from Mistral model via OpenRouter API
 async function getBotResponse(userMessage) {
     showTypingIndicator();
 
@@ -81,18 +82,17 @@ async function getBotResponse(userMessage) {
     };
 
     try {
-        console.log('Sending POST to /api/chat with message:', userMessage);
-        const response = await fetch('/api/chat', {
+        const response = await fetch(apiUrl, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': API_KEY
             },
-            body: JSON.stringify({ userMessage })
+            body: JSON.stringify(requestBody)
         });
 
-        console.log('Raw API response:', response);
-
         if (!response.ok) {
+            // Log and display error if API response isn't successful
             const errorData = await response.json();
             console.error('API Error:', errorData);
             throw new Error('Failed to fetch response from the API.');
@@ -102,8 +102,8 @@ async function getBotResponse(userMessage) {
         console.log('API Response:', data);
 
         // Update this part to match the actual structure of the response
-        if (data.message) {
-            const botMessage = data.message.trim();  // Ensure you're accessing the right field
+        if (data.choices && data.choices.length > 0 && data.choices[0].text) {
+            const botMessage = data.choices[0].text.trim();  // Updated to check for 'text'
             addMessage(botMessage);  // Add the response to the chat
         } else {
             addMessage("I'm sorry, I couldn't get a response. Please try again later.");
