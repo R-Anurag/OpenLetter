@@ -1,5 +1,3 @@
-import fetch from 'node-fetch';  // Make sure you have this installed
-
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 
 export default async function handler(req, res) {
