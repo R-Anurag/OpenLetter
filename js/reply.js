@@ -81,6 +81,7 @@ async function getBotResponse(userMessage) {
     };
 
     try {
+        console.log('Sending POST to /api/chat with message:', userMessage);
         const response = await fetch('/api/chat', {
             method: 'POST',
             headers: {
@@ -88,6 +89,8 @@ async function getBotResponse(userMessage) {
             },
             body: JSON.stringify({ userMessage })
         });
+        console.log('Raw API response:', response);
+
 
 
         if (!response.ok) {
