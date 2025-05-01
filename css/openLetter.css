@@ -328,7 +328,7 @@ icon {
 .message-bubble {
     background-color: #2f3336;
     color: #e7e9ea;
-    padding: 30px 14px;
+    padding: 10px 14px;
     border-radius: 16px;
     max-width: 90%;
     line-height: 1.4;
@@ -341,9 +341,9 @@ icon {
 }
 
 .avatar {
-    width: 28px;
+    width: 48px;
     height: 28px;
-    border-radius: 50%;
+    border-radius: 25%;
     background-color: #1da1f2;
     display: flex;
     align-items: center;
