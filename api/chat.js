@@ -1,4 +1,4 @@
-import fetch from 'node-fetch';  // Make sure you install node-fetch if you're using Vercel
+import fetch from 'node-fetch';  // Make sure you have this installed
 
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 
@@ -30,13 +30,13 @@ export default async function handler(req, res) {
             const data = await response.json();
 
             if (response.ok) {
-                // Send the AI's response back to the frontend
                 return res.status(200).json({ message: data.choices[0]?.text || "Sorry, something went wrong." });
             } else {
+                console.error('OpenRouter API Error:', data);  // Log OpenRouter error
                 return res.status(500).json({ message: data.error || 'Failed to get a response from OpenRouter.' });
             }
         } catch (error) {
-            console.error('Error:', error);
+            console.error('Internal Server Error:', error);  // Log server error
             return res.status(500).json({ message: 'Internal server error' });
         }
     } else {
