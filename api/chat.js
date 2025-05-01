@@ -1,27 +1,26 @@
-export default async function handler(req, res) {
-    console.log("Received request to /api/chat");
-    console.log("Authorization header:", process.env.OPENROUTER_API_KEY ? "FOUND" : "NOT FOUND");
+// api/chat.js
 
+export default async function handler(req, res) {
     if (req.method !== 'POST') {
-        return res.status(405).json({ error: 'Method not allowed' });
+        return res.status(405).json({ message: 'Only POST allowed' });
     }
 
-    const userMessage = req.body.userMessage;
+    const { userMessage } = req.body;
+
+    const basePrompt = `You are a defender of deep-tech innovation...`;
 
     const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-        method: "POST",
+        method: 'POST',
         headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`
         },
         body: JSON.stringify({
             model: "mistralai/mistral-small-3.1-24b-instruct:free",
             messages: [
-                { role: "system", content: "You are a defender of deep-tech innovation..." },
+                { role: "system", content: basePrompt },
                 { role: "user", content: userMessage }
-            ],
-            max_tokens: 150,
-            temperature: 0.7
+            ]
         })
     });
 
