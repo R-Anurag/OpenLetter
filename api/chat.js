@@ -1,56 +1,45 @@
-// api/chat.js
-export default async function handler(req, res) {
-    if (req.method !== 'POST') {
-        return res.status(405).json({ message: 'Only POST requests are allowed' });
-    }
+import fetch from 'node-fetch';  // Make sure you install node-fetch if you're using Vercel
 
-    try {
+const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
+
+export default async function handler(req, res) {
+    if (req.method === 'POST') {
         const { userMessage } = req.body;
-        
+
         if (!userMessage) {
-            return res.status(400).json({ message: 'No user message provided' });
+            return res.status(400).json({ message: 'No message provided.' });
         }
 
-        // OpenRouter API endpoint
-        const apiUrl = "https://openrouter.ai/api/v1/chat/completions";
-        const apiKey = process.env.OPENROUTER_API_KEY; // Store your API key in environment variables
-
-        // Request body for OpenRouter API
         const requestBody = {
-            model: "mistralai/mistral-small-3.1-24b-instruct:free",
-            messages: [
-                {
-                    role: "user",
-                    content: [
-                        {
-                            type: "text",
-                            text: userMessage
-                        }
-                    ]
-                }
-            ]
+            model: 'mistralai/mistral-small-3.1-24b-instruct:free',
+            prompt: `You are a defender of deep-tech innovation. Respond intelligently to the user's queries on technology and innovation, especially focusing on areas like semiconductors, AI, robotics, EVs, space tech, quantum computing, and global moonshots. Commerce Minister Piyush Goyal has urged Indian tech founders to focus on these fields over food delivery and quick-commerce models.\n\nUser: ${userMessage}`,
+            max_tokens: 150,
+            temperature: 0.7
         };
 
-        const response = await fetch(apiUrl, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${apiKey}`,
-                'Content-Type': 'application/json',
-                'HTTP-Referer': '<YOUR_SITE_URL>',  // Optional, replace with your site URL
-                'X-Title': '<YOUR_SITE_NAME>'       // Optional, replace with your site title
-            },
-            body: JSON.stringify(requestBody)
-        });
+        try {
+            const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestBody)
+            });
 
-        const data = await response.json();
+            const data = await response.json();
 
-        if (response.ok && data.choices && data.choices.length > 0) {
-            res.status(200).json({ message: data.choices[0].text.trim() });
-        } else {
-            res.status(500).json({ message: 'Failed to get a valid response from OpenRouter.' });
+            if (response.ok) {
+                // Send the AI's response back to the frontend
+                return res.status(200).json({ message: data.choices[0]?.text || "Sorry, something went wrong." });
+            } else {
+                return res.status(500).json({ message: data.error || 'Failed to get a response from OpenRouter.' });
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            return res.status(500).json({ message: 'Internal server error' });
         }
-    } catch (error) {
-        console.error('Error during OpenRouter request:', error);
-        res.status(500).json({ message: 'Internal Server Error' });
+    } else {
+        return res.status(405).json({ message: 'Method Not Allowed' });
     }
 }
