@@ -56,7 +56,7 @@ async function getBotResponse(userMessage) {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ userMessage })
+            body: JSON.stringify({ userMessage, prompt: basePrompt })
         });
 
         console.log('Raw API response:', response);
