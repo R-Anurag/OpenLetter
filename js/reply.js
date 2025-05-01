@@ -40,7 +40,7 @@ function hideTypingIndicator() {
     typingIndicator.style.display = 'none';
 }
 
-// Function to get response from Mistral model via OpenRouter API
+// Function to get response from Vercel API (your backend)
 async function getBotResponse(userMessage) {
     showTypingIndicator();
 
@@ -89,12 +89,10 @@ async function getBotResponse(userMessage) {
             },
             body: JSON.stringify({ userMessage })
         });
+
         console.log('Raw API response:', response);
 
-
-
         if (!response.ok) {
-            // Log and display error if API response isn't successful
             const errorData = await response.json();
             console.error('API Error:', errorData);
             throw new Error('Failed to fetch response from the API.');
@@ -104,8 +102,8 @@ async function getBotResponse(userMessage) {
         console.log('API Response:', data);
 
         // Update this part to match the actual structure of the response
-        if (data.choices && data.choices.length > 0 && data.choices[0].text) {
-            const botMessage = data.choices[0].text.trim();  // Updated to check for 'text'
+        if (data.message) {
+            const botMessage = data.message.trim();  // Ensure you're accessing the right field
             addMessage(botMessage);  // Add the response to the chat
         } else {
             addMessage("I'm sorry, I couldn't get a response. Please try again later.");
