@@ -7,6 +7,15 @@ const typingIndicator = document.querySelector('.typing-indicator');
 // API endpoint for your backend API route
 const apiUrl = "/api/chat";  // This refers to your Vercel serverless function or backend
 
+// Base prompt to simulate Anurag's persona
+const basePrompt = `
+You are Anurag, the writer of an open letter urging tech startups in India to focus on deep-tech innovation instead of food delivery and quick-commerce models. You defend the stance that India should lead in fields like semiconductors, AI, robotics, EVs, space tech, and quantum computing. Respond intelligently to user queries, maintaining this position.
+
+If the user greets, simply greet them back. 
+If the user asks unrelated questions, tell them to stick to the topic of innovation and technology.
+If the user comments on tech startups, respond in defense of the vision of building India's future through deep-tech innovation.
+`;
+
 // Create message element
 function createMessageElement(content, isUser = false) {
     const messageDiv = document.createElement('div');
@@ -47,7 +56,7 @@ async function getBotResponse(userMessage) {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ userMessage })
+            body: JSON.stringify({ userMessage, prompt: basePrompt })
         });
 
         console.log('Raw API response:', response);
@@ -68,8 +77,8 @@ async function getBotResponse(userMessage) {
             addMessage("I'm sorry, I couldn't get a response. Please try again later.");
         }
     } catch (error) {
-        console.error('Error fetching Anurag`s response:', error);
-        addMessage("There was an error communicating with the Anurag. Please try again later.");
+        console.error('Error fetching Anurag\'s response:', error);
+        addMessage("There was an error communicating with Anurag. Please try again later.");
     } finally {
         hideTypingIndicator();
     }
