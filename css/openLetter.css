@@ -328,9 +328,9 @@ icon {
 .message-bubble {
     background-color: #2f3336;
     color: #e7e9ea;
-    padding: 10px 14px;
+    padding: 30px 14px;
     border-radius: 16px;
-    max-width: 80%;
+    max-width: 90%;
     line-height: 1.4;
     word-wrap: break-word;
 }
