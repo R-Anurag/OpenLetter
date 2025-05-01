@@ -1,43 +1,56 @@
-// Vercel Backend API handler (api/chat.js)
-const fetch = require('node-fetch');  // Add this if you're using Node.js
-
+// api/chat.js
 export default async function handler(req, res) {
-    if (req.method === 'POST') {
+    if (req.method !== 'POST') {
+        return res.status(405).json({ message: 'Only POST requests are allowed' });
+    }
+
+    try {
         const { userMessage } = req.body;
+        
+        if (!userMessage) {
+            return res.status(400).json({ message: 'No user message provided' });
+        }
 
-        // API endpoint for OpenRouter Mistral Model
+        // OpenRouter API endpoint
         const apiUrl = "https://openrouter.ai/api/v1/chat/completions";
-        const apiKey = process.env.OPENROUTER_API_KEY;  // Store your API key in environment variables
+        const apiKey = process.env.OPENROUTER_API_KEY; // Store your API key in environment variables
 
+        // Request body for OpenRouter API
         const requestBody = {
-            model: "mistralai/mistral-small-3.1-24b-instruct:free",  // Ensure the model name is correct
-            prompt: `You are a defender of deep-tech innovation. Respond intelligently to the user's queries on technology and innovation, especially focusing on areas like semiconductors, AI, robotics, EVs, space tech, quantum computing, and global moonshots. Commerce Minister Piyush Goyal has urged Indian tech founders to focus on these fields over food delivery and quick-commerce models. User: ${userMessage}`,
-            max_tokens: 150,  // Adjust for paragraph-like responses
-            temperature: 0.7  // Natural, conversational tone
+            model: "mistralai/mistral-small-3.1-24b-instruct:free",
+            messages: [
+                {
+                    role: "user",
+                    content: [
+                        {
+                            type: "text",
+                            text: userMessage
+                        }
+                    ]
+                }
+            ]
         };
 
-        try {
-            const response = await fetch(apiUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${apiKey}`  // Include the API key for authentication
-                },
-                body: JSON.stringify(requestBody)
-            });
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${apiKey}`,
+                'Content-Type': 'application/json',
+                'HTTP-Referer': '<YOUR_SITE_URL>',  // Optional, replace with your site URL
+                'X-Title': '<YOUR_SITE_NAME>'       // Optional, replace with your site title
+            },
+            body: JSON.stringify(requestBody)
+        });
 
-            if (!response.ok) {
-                const errorData = await response.json();
-                return res.status(response.status).json({ error: errorData });
-            }
+        const data = await response.json();
 
-            const data = await response.json();
-            return res.status(200).json(data);  // Send back the response to the frontend
-
-        } catch (error) {
-            return res.status(500).json({ error: 'Error fetching data from OpenRouter API.' });
+        if (response.ok && data.choices && data.choices.length > 0) {
+            res.status(200).json({ message: data.choices[0].text.trim() });
+        } else {
+            res.status(500).json({ message: 'Failed to get a valid response from OpenRouter.' });
         }
-    } else {
-        res.status(405).json({ error: 'Method Not Allowed' });
+    } catch (error) {
+        console.error('Error during OpenRouter request:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
     }
 }
