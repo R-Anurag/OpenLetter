@@ -41,58 +41,22 @@ function hideTypingIndicator() {
     typingIndicator.style.display = 'none';
 }
 
-// Function to get response from Mistral model via OpenRouter API
 async function getBotResponse(userMessage) {
     showTypingIndicator();
 
-    // Define the base prompt
-    const basePrompt = `
-    You are an AI that defends the importance of deep-tech innovation for India's future. 
-    You advocate for the development of fields like semiconductors, artificial intelligence, robotics, 
-    space tech, EVs, and quantum computing. Respond naturally and assertively when the user mentions 
-    topics related to food delivery or quick-commerce startups, politely disagreeing and emphasizing 
-    the need for innovation in deep-tech sectors instead. If the user mentions deep-tech or related topics, 
-    engage them with detailed arguments highlighting the potential of these technologies for India’s growth.
-    `;
-
-    // Check if the user has mentioned food delivery or startups
-    const deliveryKeywords = ['food delivery', 'quick-commerce', 'delivery apps', 'startup ecosystem'];
-    const deepTechKeywords = ['AI', 'artificial intelligence', 'semiconductors', 'robotics', 'space tech', 'quantum computing'];
-
-    let responseContent = "";
-
-    // Check if the user's message includes keywords about food delivery or startups
-    if (deliveryKeywords.some(keyword => userMessage.toLowerCase().includes(keyword))) {
-        responseContent = "While food delivery and quick-commerce models have gained popularity, we must recognize the limitations of these business models. They're short-term solutions and don't push the envelope of technological progress. India’s future lies in areas like semiconductors, AI, and robotics, which can transform industries and create sustainable growth.";
-    }
-    // Check if the user's message includes keywords about deep-tech
-    else if (deepTechKeywords.some(keyword => userMessage.toLowerCase().includes(keyword))) {
-        responseContent = "Absolutely! Deep-tech innovations like AI, semiconductors, and robotics are not just the future; they’re the foundation for India’s next phase of technological evolution. These sectors have immense potential to redefine global industries and create economic opportunities beyond the quick-commerce models.";
-    } 
-    // Default response for neutral or off-topic messages
-    else {
-        responseContent = `You know, the real game-changer for India’s tech landscape is in the realm of deep-tech. Focus on technologies like semiconductors, robotics, AI, and space tech is what we need to build a future that's not just about convenience but also innovation, security, and sustainability. We should think bigger!`;
-    }
-
-    const requestBody = {
-        model: "mistralai/mistral-small-3.1-24b-instruct:free",  // Ensure the model name is correct
-        prompt: `${basePrompt}\nUser: ${userMessage}\nAI: ${responseContent}`,
-        max_tokens: 150,  // Adjust for paragraph-like responses
-        temperature: 0.7  // Natural, conversational tone
-    };
-
     try {
-        const response = await fetch(apiUrl, {
+        console.log('Sending POST to /api/chat with message:', userMessage);
+        const response = await fetch('/api/chat', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': API_KEY
+                'Content-Type': 'application/json'
             },
-            body: JSON.stringify(requestBody)
+            body: JSON.stringify({ userMessage })
         });
 
+        console.log('Raw API response:', response);
+
         if (!response.ok) {
-            // Log and display error if API response isn't successful
             const errorData = await response.json();
             console.error('API Error:', errorData);
             throw new Error('Failed to fetch response from the API.');
@@ -101,10 +65,9 @@ async function getBotResponse(userMessage) {
         const data = await response.json();
         console.log('API Response:', data);
 
-        // Update this part to match the actual structure of the response
-        if (data.choices && data.choices.length > 0 && data.choices[0].text) {
-            const botMessage = data.choices[0].text.trim();  // Updated to check for 'text'
-            addMessage(botMessage);  // Add the response to the chat
+        // Handle the response
+        if (data.message) {
+            addMessage(data.message);  // Display the bot's response
         } else {
             addMessage("I'm sorry, I couldn't get a response. Please try again later.");
         }
