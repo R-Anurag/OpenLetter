@@ -53,7 +53,7 @@ h2 {
 
 .headline {
     width: 100%;
-    padding: 10px;
+    padding-bottom: 20px;
 }
 
 .header-title {
@@ -424,7 +424,7 @@ icon {
 
 .uts-text {
     position: fixed;
-    top: 40px;
+    top: 30px;
     left: 50%;
     transform: translateX(-50%);
     list-style: none;
@@ -433,7 +433,7 @@ icon {
     /* font-family: "Source Sans 3", sans-serif; */
     font-family: "Alegreya", "Protest Guerrilla", sans-serif;
     font-weight: 700;
-    font-size: 2.5rem;
+    font-size: 2.2rem;
     color: rgb(189, 181, 181);
     cursor: default;
     transition: all 0.3s ease-in-out;
