@@ -23,6 +23,7 @@ const pageId = "chat-anurag";
 // --- ELEMENTS ---
 const likeButton = document.querySelector('.like');
 const likeValue = document.querySelector('.like-value');
+const impressionValue = document.querySelector(".impression-value");
 
 // --- IMPRESSION TRACKING ---
 async function trackImpression() {
@@ -47,22 +48,24 @@ async function displayStats() {
     const snap = await getDoc(doc(db, "stats", pageId));
     if (snap.exists()) {
       const data = snap.data();
-      console.log("Fetched data:", data);
-
+      console.log("Firestore data:", data);
       likeValue.textContent = data.likes ?? 0;
-
-      // Restore like state from localStorage
-      if (localStorage.getItem("liked-" + pageId)) {
-        likeButton.classList.add('liked');
-      }
+      impressionValue.textContent = data.impressions ?? 0;
     } else {
-      console.warn("No document found for page:", pageId);
-      likeValue.textContent = "0";
+      likeValue.textContent = 0;
+      impressionValue.textContent = 0;
+    }
+
+    if (localStorage.getItem(likeKey)) {
+      likeButton.classList.add("liked");
+    } else {
+      likeButton.classList.remove("liked");
     }
   } catch (e) {
-    console.error("Error displaying stats:", e);
+    console.error("Error reading stats:", e);
   }
 }
+
 
 
 // --- LIKE EVENT ---
