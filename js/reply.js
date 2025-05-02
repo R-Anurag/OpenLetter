@@ -110,7 +110,7 @@ messageInput.addEventListener('keypress', (e) => {
 
 // Initial greeting
 setTimeout(() => {
-    addMessage("Start your take — I'm ready to disagree.");
+    addMessage("Start your take — I'm ready to defend my stance.");
 }, 500);
 
 // Canned responses (example buttons)
