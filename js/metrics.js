@@ -26,9 +26,15 @@ const likeValue = document.querySelector('.like-value');
 
 // --- IMPRESSION TRACKING ---
 async function trackImpression() {
-  const docRef = doc(db, "stats", pageId);
-  await setDoc(docRef, { impressions: increment(1) }, { merge: true });
+  try {
+    const docRef = doc(db, "stats", pageId);
+    await setDoc(docRef, { impressions: increment(1) }, { merge: true });
+    console.log("Impression tracked.");
+  } catch (e) {
+    console.error("Error tracking impression:", e);
+  }
 }
+
 
 // --- LIKE LOGIC ---
 async function updateLikeCount(change) {
@@ -37,17 +43,27 @@ async function updateLikeCount(change) {
 }
 
 async function displayStats() {
-  const snap = await getDoc(doc(db, "stats", pageId));
-  if (snap.exists()) {
-    const data = snap.data();
-    likeValue.textContent = data.likes ?? 0;
+  try {
+    const snap = await getDoc(doc(db, "stats", pageId));
+    if (snap.exists()) {
+      const data = snap.data();
+      console.log("Fetched data:", data);
 
-    // Restore like state from localStorage
-    if (localStorage.getItem("liked-" + pageId)) {
-      likeButton.classList.add('liked');
+      likeValue.textContent = data.likes ?? 0;
+
+      // Restore like state from localStorage
+      if (localStorage.getItem("liked-" + pageId)) {
+        likeButton.classList.add('liked');
+      }
+    } else {
+      console.warn("No document found for page:", pageId);
+      likeValue.textContent = "0";
     }
+  } catch (e) {
+    console.error("Error displaying stats:", e);
   }
 }
+
 
 // --- LIKE EVENT ---
 likeButton?.addEventListener('click', async () => {
