@@ -205,6 +205,12 @@ h2 {
     cursor: pointer;
 }
 
+.like.liked svg path {
+    fill: #f91880;
+    stroke: #f91880;
+    transition: all 0.3s ease;
+}
+
 .highlight {
     font-weight: 700;
     color: #1da1f2;
