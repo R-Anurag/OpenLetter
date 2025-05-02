@@ -30,7 +30,15 @@ const impressionValue = document.querySelector(".impression-value");
 async function trackImpression() {
   try {
     const docRef = doc(db, "stats", pageId);
-    await setDoc(docRef, { impressions: increment(1) }, { merge: true });
+    const snap = await getDoc(docRef);
+
+    if (!snap.exists()) {
+      // Initialize document if not exists (first time view), set impressions and likes to 0
+      await setDoc(docRef, { impressions: 0, likes: 0 }, { merge: true });
+    }
+
+    // Increment impressions count on each page load
+    await updateDoc(docRef, { impressions: increment(1) });
     console.log("Impression tracked.");
   } catch (e) {
     console.error("Error tracking impression:", e);
@@ -43,54 +51,61 @@ async function updateLikeCount(change) {
   await setDoc(docRef, { likes: increment(change) }, { merge: true });
 }
 
+// --- READ STATS FROM FIRESTORE ---
 async function displayStats() {
   try {
     const snap = await getDoc(doc(db, "stats", pageId));
     if (snap.exists()) {
       const data = snap.data();
       console.log("Firestore data:", data);
-      likeValue.textContent = data.likes ?? 0;
-      impressionValue.textContent = data.impressions ?? 0;
+
+      // Show likes and impressions from Firestore
+      likeValue.textContent = data.likes ?? 0;  // Likes from Firestore or 0 if not set
+      impressionValue.textContent = data.impressions ?? 0; // Impressions from Firestore or 0
+
+      // Sync localStorage like state with Firestore value
+      if (localStorage.getItem(likeKey)) {
+        likeButton.classList.add("liked");  // User already liked the page
+      } else {
+        likeButton.classList.remove("liked"); // User has not liked the page
+      }
     } else {
+      // If Firestore document does not exist, create it with default values
+      await setDoc(doc(db, "stats", pageId), { likes: 0, impressions: 0 });
       likeValue.textContent = 0;
       impressionValue.textContent = 0;
-    }
-
-    // Check local storage for like state
-    if (localStorage.getItem(likeKey)) {
-      likeButton.classList.add("liked");
-    } else {
-      likeButton.classList.remove("liked");
     }
   } catch (e) {
     console.error("Error reading stats:", e);
   }
 }
 
-// --- LIKE EVENT ---
+// --- LIKE EVENT HANDLER ---
 likeButton?.addEventListener('click', async () => {
-  const key = "liked-" + pageId;
-  const isLiked = localStorage.getItem(key);
+  const isLiked = localStorage.getItem(likeKey);
 
+  // Toggle like state
   if (!isLiked) {
-    localStorage.setItem(key, "true");
-    await updateLikeCount(1);
+    // Like the page
+    localStorage.setItem(likeKey, "true");
+    await updateLikeCount(1); // Increment likes in Firestore
     likeButton.classList.add("liked");
   } else {
-    localStorage.removeItem(key);
-    await updateLikeCount(-1);
+    // Unlike the page
+    localStorage.removeItem(likeKey);
+    await updateLikeCount(-1); // Decrement likes in Firestore
     likeButton.classList.remove("liked");
   }
 
-  // Refresh count after like action
+  // Refresh stats after like/unlike
   displayStats();
 });
 
-// --- INIT ---
+// --- INIT: Load stats on page load ---
 window.addEventListener("DOMContentLoaded", () => {
-  // Track impression when page loads
+  // Track impression when the page loads
   trackImpression();
   
-  // Display stats on page load (this will reflect likes & impressions from Firestore)
+  // Fetch and display stats after page load
   displayStats();
 });
