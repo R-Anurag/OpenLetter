@@ -334,7 +334,7 @@ icon {
     background-color: #2f3336;
     color: #e7e9ea;
     padding: 10px 14px;
-    border-radius: 16px;
+    border-radius: 8px;
     max-width: 70%;
     line-height: 1.2;
     word-wrap: break-word;
@@ -365,7 +365,7 @@ icon {
     content: "";
     position: absolute;
     bottom: -8px;
-    left: 34px;
+    left: 0px;
     border: 10px solid transparent;
     border-left-color: #2f3336;
     margin-bottom: 2px;
@@ -376,7 +376,7 @@ icon {
     content: "";
     position: absolute;
     bottom: -8px;
-    right: 34px;
+    right: 0px;
     border: 10px solid transparent;
     border-right-color: #1da1f2;
     margin-bottom: 2px;
