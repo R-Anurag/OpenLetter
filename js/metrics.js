@@ -37,7 +37,6 @@ async function trackImpression() {
   }
 }
 
-
 // --- LIKE LOGIC ---
 async function updateLikeCount(change) {
   const docRef = doc(db, "stats", pageId);
@@ -57,6 +56,7 @@ async function displayStats() {
       impressionValue.textContent = 0;
     }
 
+    // Check local storage for like state
     if (localStorage.getItem(likeKey)) {
       likeButton.classList.add("liked");
     } else {
@@ -66,8 +66,6 @@ async function displayStats() {
     console.error("Error reading stats:", e);
   }
 }
-
-
 
 // --- LIKE EVENT ---
 likeButton?.addEventListener('click', async () => {
@@ -84,12 +82,15 @@ likeButton?.addEventListener('click', async () => {
     likeButton.classList.remove("liked");
   }
 
-  // Refresh count
+  // Refresh count after like action
   displayStats();
 });
 
 // --- INIT ---
 window.addEventListener("DOMContentLoaded", () => {
+  // Track impression when page loads
   trackImpression();
+  
+  // Display stats on page load (this will reflect likes & impressions from Firestore)
   displayStats();
 });
