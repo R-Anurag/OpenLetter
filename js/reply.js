@@ -20,15 +20,19 @@ If the user comments on tech startups, respond in defense of the vision of build
 function createMessageElement(content, isUser = false) {
     const messageDiv = document.createElement('div');
     messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
-    
+
+    const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
     messageDiv.innerHTML = `
-        <div class="avatar">${isUser ? 'You' : 'Anurag'}</div>
-        <div class="message-bubble">${content}</div>
+        <div class="avatar">${isUser ? 'U' : 'AI'}</div>
+        <div class="message-bubble">
+            ${content}<br>
+            <span class="timestamp">${timestamp}</span>
+        </div>
     `;
-    
+
     return messageDiv;
 }
-
 // Add message to chat
 function addMessage(content, isUser = false) {
     const messageElement = createMessageElement(content, isUser);
