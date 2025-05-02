@@ -119,3 +119,18 @@ document.querySelectorAll('.canned-response').forEach(button => {
         handleCannedReply(e.target.innerText);
     });
 });
+
+
+// UTSAAH hiding animation on scroll
+$(function () {
+var text = $(".uts-text");
+$(window).scroll(function () {
+    var scroll = $(window).scrollTop();
+
+    if (scroll >= 10) {
+        text.addClass("hidden");
+    } else {
+        text.removeClass("hidden");
+    }
+});
+});
