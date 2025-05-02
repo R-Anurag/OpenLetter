@@ -24,7 +24,7 @@ function createMessageElement(content, isUser = false) {
     const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
     messageDiv.innerHTML = `
-        <div class="avatar">${isUser ? 'U' : ''}</div>
+        //<div class="avatar">${isUser ? 'U' : 'AI'}</div>
         <div class="message-bubble">
             ${content}<br>
             <span class="timestamp">${timestamp}</span>
