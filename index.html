@@ -198,25 +198,9 @@
         </div>
 
         <!-- Script -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script type="module" src="js/metrics.js"></script>
         <script src="js/reply.js" defer></script>
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script>
-            $(function () {
-                var text = $(".uts-text");
-                $(window).scroll(function () {
-                    var scroll = $(window).scrollTop();
-
-                    if (scroll >= 30) {
-                        text.addClass("hidden");
-                    } else {
-                        text.removeClass("hidden");
-                    }
-                });
-            });
-        </script>
-
-        </script>
 
 </body>
 
