@@ -21,6 +21,7 @@ const db = getFirestore(app);
 const pageId = "chat-anurag";
 
 // --- ELEMENTS ---
+const likeKey = "liked-" + pageId;
 const likeButton = document.querySelector('.like');
 const likeValue = document.querySelector('.like-value');
 const impressionValue = document.querySelector(".impression-value");
