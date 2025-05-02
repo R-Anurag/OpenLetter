@@ -314,10 +314,9 @@ icon {
 .message {
     display: flex;
     align-items: flex-start;
-    gap: 10px;
+    gap: 5px;
     max-width: 90%;
-    padding: 8px;
-    border-radius: 10px;
+    border-radius: 8px;
     font-size: 14px;
     animation: fadeIn 0.3s ease-in-out;
 }
@@ -336,8 +335,8 @@ icon {
     color: #e7e9ea;
     padding: 10px 14px;
     border-radius: 16px;
-    max-width: 90%;
-    line-height: 1.4;
+    max-width: 70%;
+    line-height: 1.2;
     word-wrap: break-word;
 }
 
@@ -346,10 +345,55 @@ icon {
     color: white;
 }
 
+/* Base tail styling */
+.message-bubble::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    width: 0;
+    height: 0;
+    border: 10px solid transparent;
+}
+
+/* Wrapper to position tail relative to bubble */
+.message {
+    position: relative;
+}
+
+/* Bot bubble tail (left side) */
+.bot-message .message-bubble::after {
+    content: "";
+    position: absolute;
+    bottom: -8px;
+    left: 34px;
+    border: 10px solid transparent;
+    border-left-color: #2f3336;
+    margin-bottom: 2px;
+}
+
+/* User bubble tail (right side) */
+.user-message .message-bubble::after {
+    content: "";
+    position: absolute;
+    bottom: -8px;
+    right: 34px;
+    border: 10px solid transparent;
+    border-right-color: #1da1f2;
+    margin-bottom: 2px;
+}
+
+.timestamp {
+    font-size: 11px;
+    color: #d7d4d4;
+    margin-top: 6px;
+    text-align: right;
+    opacity: 0.8;
+}
+
 .avatar {
-    width: 48px;
+    width: 28px;
     height: 28px;
-    border-radius: 25%;
+    border-radius: 50%;
     background-color: #1da1f2;
     display: flex;
     align-items: center;
@@ -359,7 +403,6 @@ icon {
     font-size: 12px;
     flex-shrink: 0;
 }
-
 .typing-indicator {
     display: none;
     align-self: flex-start;
