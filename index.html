@@ -196,25 +196,37 @@
 
             </div>
         </div>
-        
+
         <!-- Script -->
-        <script src="js/reply.js" defer></script>
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script>
-            $(function () {
-                var text = $(".uts-text");
-                $(window).scroll(function () {
-                    var scroll = $(window).scrollTop();
+    </div> <script src="js/reply.js" defer></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(function () {
+            var text = $(".uts-text");
+            $(window).scroll(function () {
+                var scroll = $(window).scrollTop();
 
-                    if (scroll >= 70) {
-                        text.addClass("hidden");
-                    } else {
-                        text.removeClass("hidden");
-                    }
-                });
+                if (scroll >= 70) {
+                    text.addClass("hidden");
+                } else {
+                    text.removeClass("hidden");
+                }
             });
-        </script>
-        </script>
+        });
+    </script>
 
-</body>
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="social-links">
+                <a href="#" aria-label="Twitter"><i class="fa-brands fa-twitter"></i></a>
+                <a href="https://www.linkedin.com/in/r-anurag" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                <a href="https://github.com/R-Anurag" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+                <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            </div>
+            <div class="copyright">
+                &copy; 2025 Anurag Rai. All Rights Reserved.
+            </div>
+        </div>
+    </footer>
+    </body>
 </html>
